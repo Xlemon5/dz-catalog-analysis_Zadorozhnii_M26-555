@@ -9,13 +9,6 @@ authors = [
 requires-python = ">=3.12"
 dependencies = []
 
-[project.scripts]
-dz-catalog-analysis-zadorozhnii-m26-555 = "dz_catalog_analysis_zadorozhnii_m26_555:main"
-
-[build-system]
-requires = ["uv_build>=0.12.17,<0.13.0"]
-build-backend = "uv_build"
-
 [dependency-groups]
 dev = [
     "ruff>=0.16.8",
