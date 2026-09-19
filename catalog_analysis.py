@@ -1,0 +1,116 @@
+import math
+
+movies = [
+    {"title": "The Dune Chronicles", "year": 2021, "genres": {"sci-fi", "drama"},
+     "rating": 8.6, "duration_min": 155, "actors": ["T. Chalamet", "R. Ferguson", "O. Isaac"]},
+    {"title": "Kitchen Stories", "year": 2019, "genres": {"comedy", "drama"},
+     "rating": 7.1, "duration_min": 98, "actors": ["A. Novak", "M. Ferguson"]},
+    {"title": "silent hours", "year": 2016, "genres": {"thriller", "drama"},
+     "rating": 6.4, "duration_min": 112, "actors": ["J. Bloom", "K. Lee"]},
+    {"title": "Comet Racers", "year": 2023, "genres": {"sci-fi", "action"},
+     "rating": 5.9, "duration_min": 101, "actors": ["O. Isaac", "P. Diaz"]},
+    {"title": "The Last Bakery", "year": 2014, "genres": {"comedy"},
+     "rating": 7.8, "duration_min": 89, "actors": ["A. Novak", "T. Chalamet"]},
+    {"title": "midnight in oslo", "year": 2020, "genres": {"thriller", "mystery"},
+     "rating": 8.9, "duration_min": 124, "actors": ["K. Lee", "R. Ferguson"]},
+    {"title": "Garden of Static", "year": 2022, "genres": {"drama"},
+     "rating": 4.8, "duration_min": 137, "actors": ["P. Diaz", "J. Bloom"]},
+    {"title": "The Quiet Algorithm", "year": 2024, "genres": {"sci-fi", "drama"},
+     "rating": 9.2, "duration_min": 118, "actors": ["M. Ferguson", "O. Isaac"]},
+    {"title": "Two Left Shoes", "year": 2011, "genres": {"comedy"},
+     "rating": 6.0, "duration_min": 95, "actors": ["A. Novak", "K. Lee"]},
+    {"title": "Red Harbor", "year": 2018, "genres": {"action", "thriller"},
+     "rating": 7.3, "duration_min": 129, "actors": ["P. Diaz", "T. Chalamet"]},
+]
+
+# STAGE_1
+def average_rating(movies):
+    total = 0
+    for movie in movies:
+        total += movie['rating']
+    return round(total/len(movies), 1)
+        
+def catalog_age_stats(movies, current_year=2026):
+    newest = 9999
+    oldest = -1
+    average_age = 0
+    age_film = 0
+    for movie in movies:
+        age_film = current_year - movie['year'] 
+        newest = min(newest, age_film)
+        oldest = max(oldest, age_film)
+        average_age += age_film
+    return (oldest, newest, math.ceil(average_age/len(movies))) 
+
+def duration_in_hours(minutes):
+    hours = minutes // 60
+    remaining_minutes = minutes % 60
+
+    return f"{hours}ч {remaining_minutes}м"
+
+
+#STAGE_2
+def rating_tier(rating):
+    if rating >= 9:
+        category = "шедевр"
+    elif rating >= 7:
+        category = "хорошо"
+    elif rating >= 5:
+        category = "средне"
+    else:
+        category = "слабо"
+
+    return category if rating >= 0 else "некорректная оценка"
+
+
+def decade_label(year):
+    match year:
+        case year if year > 2020:
+            return "новые"
+        case year if 2015 <= year <= 2020:
+            return "недавние"
+        case _:
+            return "старые"
+        
+        
+#STAGE_3  
+
+# print("Titles of movies that do not belong to the comedy genre: ")
+print("Названия фильмов, которые не относятся к жанру комедии")
+for movie in movies:
+    if 'comedy' in movie['genres']:
+        continue
+    print(" -", movie['title'])
+
+ind = 0
+while ind <= len(movies):
+    if movies[ind]['rating'] > 9.0:
+        print(f"Найден шедевр: {movies[ind]['title']} (рейтинг: {movies[ind]['rating']})")
+        break
+    ind += 1
+else:
+    print("Шедевров не найдено")
+        
+def count_long_movies(movies, threshold=120):
+    count = 0
+    for movie in movies:      
+        if movie['duration_min'] > threshold:
+            count += 1
+    return count
+
+
+#STAGE 4
+def normalize_title(title):
+    words = title.split()
+    normalized_words = [word[0].upper() + word[1:] for word in words]
+    return " ".join(normalized_words)
+
+
+def make_slug(title):
+    return title.lower().replace(" ", "-")
+    
+def format_report_line(movie):
+    sorted_genres = ", ".join(sorted(movie["genres"]))
+    return (f'"{movie["title"]}" ({movie["year"]}) — {movie["rating"]}/10, '
+            f'{duration_in_hours(movie["duration_min"])}, жанры: {sorted_genres}')
+
